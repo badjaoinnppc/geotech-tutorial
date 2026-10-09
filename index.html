@@ -55,6 +55,15 @@ main { padding: 0 48px 120px; min-width: 0; }
 .hero .facts span::before { content: '✓ '; color: var(--amber); font-weight: 700; }
 .temp-note { margin: 22px 0 0; font-size: 13.5px; background: rgba(0,0,0,.18); display: inline-block; padding: 6px 12px; border-radius: 6px; }
 
+/* ---------- download panel */
+.download { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 28px; background: var(--white); border: 2px solid var(--blue-600); border-radius: 14px; padding: 22px 26px; margin: 18px 0 8px; max-width: 900px; box-shadow: 0 4px 18px rgba(31,78,156,.10); }
+.download .icon { width: 64px; height: 64px; flex: none; }
+.download .what { flex: 1; min-width: 240px; }
+.download .what b { font-size: 19px; color: var(--blue-900); display: block; }
+.download .what span { color: var(--muted); font-size: 14.5px; }
+.download .btn.primary { font-size: 17px; padding: 13px 24px; }
+.sha { font-family: Consolas, monospace; font-size: 12.5px; word-break: break-all; color: var(--muted); }
+
 /* ---------- sections */
 section { padding-top: 36px; }
 h2 { font-size: 29px; margin: 26px 0 8px; color: var(--blue-900); display: flex; align-items: center; gap: 12px; }
@@ -168,6 +177,7 @@ main { overflow-x: clip; }
   <strong>GeoTech Report Studio</strong>
   <span class="tag hide-sm">Tutorial · version 0.10</span>
   <span class="spacer"></span>
+  <a href="#download" class="hide-sm"><b>Download</b></a>
   <a href="#install" class="hide-sm">Install</a>
   <a href="#reports" class="hide-sm">Reports</a>
   <a href="#faq" class="hide-sm">Help</a>
@@ -178,6 +188,7 @@ main { overflow-x: clip; }
   <div class="label">Start here</div>
   <a href="#overview">What the program does</a>
   <a href="#workflow">The workflow at a glance</a>
+  <a href="#download">Download the installer</a>
   <a href="#install">1 · Installing</a>
   <a href="#tour">2 · A tour of the screen</a>
   <div class="label">Setting up</div>
@@ -216,7 +227,8 @@ main { overflow-x: clip; }
   <h1>From field sheet to signed report — step by step</h1>
   <p class="lead">This guide walks you through GeoTech Report Studio screen by screen. You'll enter Advanced Dynamic Cone Penetration Test (ADCPT) readings, check the calculations and charts, and print a complete A4 geotechnical engineering report.</p>
   <div class="btns">
-    <a class="btn primary" href="#workflow">Start the tutorial ↓</a>
+    <a class="btn primary" href="https://github.com/badjaoinnppc/geotech-tutorial/releases/download/v0.10.0/GeoTech-Report-Studio-Setup-0.10.0-public.exe">⬇ Download installer (Windows, 107 MB)</a>
+    <a class="btn ghost" href="#workflow">Start the tutorial ↓</a>
     <a class="btn ghost" href="sample-report.pdf" target="_blank" rel="noopener">Open a sample report (PDF)</a>
   </div>
   <div class="facts"><span>Works fully offline</span><span>No account or internet needed</span><span>Data stays on your computer</span><span>Print-ready A4 PDF</span></div>
@@ -257,15 +269,26 @@ main { overflow-x: clip; }
 <section id="install">
   <h2><span class="num">1</span>Installing</h2>
   <p class="intro">You install the program once. It needs no internet, no account and no other software.</p>
+  <div id="download" class="download">
+    <img class="icon" src="icon.png" alt="">
+    <div class="what">
+      <b>GeoTech Report Studio 0.10.0</b>
+      <span>Windows 10 / 11 (64-bit) · 107 MB · installs per-user, no administrator rights · works offline</span>
+    </div>
+    <a class="btn primary" href="https://github.com/badjaoinnppc/geotech-tutorial/releases/download/v0.10.0/GeoTech-Report-Studio-Setup-0.10.0-public.exe">⬇ Download installer</a>
+  </div>
+  <p class="sha">File: GeoTech-Report-Studio-Setup-0.10.0-public.exe · SHA-256: d4d1bd134a0dca0b56aaf4963d101c3f159c638d484e75a975c221e01916be21 · <a href="https://github.com/badjaoinnppc/geotech-tutorial/releases/tag/v0.10.0" target="_blank" rel="noopener">release page</a></p>
+  <div class="box info"><strong>About this download</strong>
+    <p>This is the complete program. Its built-in demonstration project (<b>Load reference example</b>) uses fictional sample names, like the screenshots on this page. Results are certified only after the responsible engineer signs the calculation method inside the program (<a href="#signoff">section 12</a>).</p></div>
   <h3>What you need</h3>
   <ul>
     <li>A Windows 10 or Windows 11 computer (64-bit).</li>
     <li>About 400 MB of free disk space.</li>
-    <li>The installer file <code>GeoTech-Report-Studio-Setup-0.10.0.exe</code>, from your software provider (for example on a USB drive).</li>
+    <li>The installer file: <a href="#download">download it above</a>, or use the copy from your software provider (for example on a USB drive).</li>
   </ul>
   <h3>Steps</h3>
   <ol class="steps">
-    <li><b>Double-click the installer.</b></li>
+    <li><b>Download the installer</b> (button above) and <b>double-click it</b>. If your browser asks, choose <b>Keep</b>: some browsers warn about new programs that are not yet widely downloaded.</li>
     <li><b>If Windows shows "Windows protected your PC",</b> click <b>More info</b>, then <b>Run anyway</b>. The installer isn't yet signed with a commercial certificate, which is why Windows asks. Only do this for an installer you received directly from your provider.</li>
     <li><b>Choose "Only for me"</b> (no administrator password needed) and click <b>Next</b>. You can keep the suggested folder.</li>
     <li><b>Click Install</b> and wait about 20 seconds, then click <b>Finish</b>.</li>
@@ -856,6 +879,7 @@ main { overflow-x: clip; }
 <section id="faq">
   <h2><span class="num">17</span>Questions and problems</h2>
   <details><summary>Windows says "Windows protected your PC" when I install</summary><p>The installer is not yet signed with a commercial certificate. Click <b>More info → Run anyway</b>, but only for the installer you received from your provider.</p></details>
+  <details><summary>How can I check the download is genuine?</summary><p>The SHA-256 checksum of the file must be <span class="sha">d4d1bd134a0dca0b56aaf4963d101c3f159c638d484e75a975c221e01916be21</span>. In Windows PowerShell, run <code>Get-FileHash .\GeoTech-Report-Studio-Setup-0.10.0-public.exe</code> in your Downloads folder and compare the two.</p></details>
   <details><summary>The badge says "Not saved — correct the red cells"</summary><p>A cell contains something that isn't a number, such as "3x8". Click the line in the Checks list under the grid to jump to it, then fix or clear it. Saving resumes automatically.</p></details>
   <details><summary>A reading is marked amber: "higher than the previous reading"</summary><p>Gauge readings should get smaller with each drop. A higher reading usually means a typing error, or occasionally a rebound. Check the field sheet: if the value is right, you can leave it, because warnings don't stop saving.</p></details>
   <details><summary>The ASBC for a depth is missing</summary><p>Enter the critical load for that depth on the <b>Calculations</b> page. Depths without one are never filled in automatically.</p></details>
