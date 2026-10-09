@@ -1,0 +1,934 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GeoTech Report Studio — Step-by-step Tutorial</title>
+<meta name="description" content="Step-by-step tutorial for GeoTech Report Studio: from ADCPT field readings to a signed, print-ready A4 geotechnical report.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icon.png">
+<style>
+:root {
+  --blue-900: #12305f; --blue-700: #1f4e9c; --blue-600: #2a62c0; --blue-100: #e6eefb; --blue-50: #f2f6fd;
+  --amber: #e8a33d; --amber-bg: #fff4dc; --amber-ink: #6b4600;
+  --green: #1d7a46; --green-bg: #e5f4ea; --red: #b42318; --red-bg: #fde8e6;
+  --ink: #1c2430; --ink-2: #3d4a5c; --muted: #6b788a; --line: #dfe4eb; --bg: #f6f8fa; --white: #fff;
+  --radius: 10px; --font: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--bg); line-height: 1.65; font-size: 16.5px; }
+a { color: var(--blue-600); }
+img { max-width: 100%; }
+code, kbd { font-family: Consolas, 'Cascadia Mono', monospace; font-size: .88em; background: var(--blue-50); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; white-space: nowrap; }
+kbd { background: #fff; border-bottom-width: 2px; }
+
+/* ---------- top bar */
+.topbar { position: sticky; top: 0; z-index: 20; background: var(--blue-900); color: #fff; height: 60px; display: flex; align-items: center; gap: 14px; padding: 0 22px; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
+.topbar img { width: 34px; height: 34px; }
+.topbar strong { font-size: 17px; letter-spacing: .2px; }
+.topbar .tag { font-size: 12px; background: rgba(255,255,255,.14); padding: 3px 10px; border-radius: 99px; }
+.topbar .spacer { flex: 1; }
+.topbar a { color: #fff; text-decoration: none; font-size: 14px; opacity: .9; }
+.topbar a:hover { opacity: 1; text-decoration: underline; }
+.menu-btn { display: none; background: none; border: 1px solid rgba(255,255,255,.35); color: #fff; border-radius: 6px; padding: 5px 10px; font: inherit; font-size: 14px; }
+
+/* ---------- layout */
+.layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); max-width: 1480px; margin: 0 auto; }
+nav.toc { position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; padding: 22px 14px 40px 22px; border-right: 1px solid var(--line); background: var(--white); }
+nav.toc .label { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin: 14px 0 6px 8px; }
+nav.toc a { display: block; padding: 5px 10px; border-radius: 6px; color: var(--ink-2); text-decoration: none; font-size: 14.5px; line-height: 1.35; }
+nav.toc a.sub { padding-left: 24px; font-size: 13.5px; color: var(--muted); }
+nav.toc a:hover { background: var(--blue-50); }
+nav.toc a.active { background: var(--blue-100); color: var(--blue-700); font-weight: 600; }
+main { padding: 0 48px 120px; min-width: 0; }
+
+/* ---------- hero */
+.hero { margin: 0 -48px 10px; padding: 56px 48px 46px; background: linear-gradient(135deg, var(--blue-900), var(--blue-700)); color: #fff; border-bottom: 5px solid var(--amber); }
+.hero h1 { margin: 0 0 10px; font-size: 40px; line-height: 1.15; letter-spacing: -.3px; }
+.hero p.lead { font-size: 19px; max-width: 820px; margin: 0 0 22px; opacity: .95; }
+.hero .btns { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 15.5px; }
+.btn.primary { background: var(--amber); color: #1c1300; }
+.btn.ghost { background: rgba(255,255,255,.12); color: #fff; border: 1px solid rgba(255,255,255,.35); }
+.hero .facts { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 26px; font-size: 14.5px; opacity: .9; }
+.hero .facts span::before { content: '✓ '; color: var(--amber); font-weight: 700; }
+.temp-note { margin: 22px 0 0; font-size: 13.5px; background: rgba(0,0,0,.18); display: inline-block; padding: 6px 12px; border-radius: 6px; }
+
+/* ---------- sections */
+section { padding-top: 36px; }
+h2 { font-size: 29px; margin: 26px 0 8px; color: var(--blue-900); display: flex; align-items: center; gap: 12px; }
+h2 .num { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--blue-700); color: #fff; font-size: 18px; display: inline-flex; align-items: center; justify-content: center; }
+h3 { font-size: 21px; margin: 34px 0 6px; color: var(--ink); }
+h4 { font-size: 17px; margin: 22px 0 4px; }
+.intro { font-size: 17.5px; color: var(--ink-2); max-width: 900px; }
+p, ul, ol { max-width: 900px; }
+li { margin: 5px 0; }
+hr.section { border: none; border-top: 1px solid var(--line); margin: 56px 0 0; }
+
+/* steps */
+ol.steps { counter-reset: step; list-style: none; padding: 0; margin: 14px 0; }
+ol.steps > li { counter-increment: step; position: relative; padding: 2px 0 10px 50px; margin: 0; }
+ol.steps > li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--blue-100); color: var(--blue-700); font-weight: 700; display: flex; align-items: center; justify-content: center; }
+ol.steps > li:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 36px; bottom: 2px; width: 2px; background: var(--blue-100); }
+
+/* callouts */
+.box { border-radius: var(--radius); padding: 14px 18px 14px 52px; margin: 18px 0; position: relative; max-width: 900px; border: 1px solid; }
+.box::before { position: absolute; left: 16px; top: 13px; font-size: 20px; }
+.box.tip { background: var(--green-bg); border-color: #b9e0c6; } .box.tip::before { content: '💡'; }
+.box.warn { background: var(--amber-bg); border-color: #f2d59a; color: var(--amber-ink); } .box.warn::before { content: '⚠️'; }
+.box.info { background: var(--blue-50); border-color: var(--blue-100); } .box.info::before { content: 'ℹ️'; }
+.box.danger { background: var(--red-bg); border-color: #f5c2bc; color: #7a1a12; } .box.danger::before { content: '⛔'; }
+.box p { margin: 4px 0; }
+.box strong:first-child { display: block; margin-bottom: 2px; }
+
+/* figures */
+figure.shot { margin: 22px 0 30px; background: var(--white); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(18,48,95,.06); max-width: 1180px; }
+figure.shot img { display: block; width: 100%; height: auto; cursor: zoom-in; border-bottom: 1px solid var(--line); }
+figure.shot figcaption { padding: 14px 20px 16px; font-size: 15px; }
+figure.shot figcaption .title { font-weight: 700; color: var(--blue-900); margin-bottom: 6px; }
+ol.legend { list-style: none; padding: 0; margin: 6px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(330px, 100%), 1fr)); gap: 6px 22px; max-width: none; }
+ol.legend li { display: flex; gap: 10px; align-items: flex-start; margin: 0; }
+ol.legend li b.m { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--amber); color: #fff; font-size: 13px; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; box-shadow: 0 1px 3px rgba(0,0,0,.25); }
+
+/* tables */
+table.t { border-collapse: collapse; width: 100%; max-width: 900px; margin: 14px 0; font-size: 15px; background: var(--white); border-radius: 8px; overflow: hidden; }
+table.t th, table.t td { border: 1px solid var(--line); padding: 8px 12px; text-align: left; vertical-align: top; }
+table.t th { background: var(--blue-50); color: var(--blue-900); font-weight: 600; }
+table.t td.n { text-align: right; font-variant-numeric: tabular-nums; }
+table.excel { font-family: Consolas, monospace; font-size: 13.5px; max-width: 760px; }
+table.excel td { padding: 3px 10px; text-align: right; }
+table.excel th { text-align: center; }
+
+/* workflow cards */
+.flow { display: grid; grid-template-columns: repeat(auto-fill, minmax(205px, 1fr)); gap: 14px; margin: 20px 0; max-width: 1180px; }
+.flow a { background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-decoration: none; color: var(--ink); position: relative; transition: border-color .15s, transform .15s; }
+.flow a:hover { border-color: var(--blue-600); transform: translateY(-2px); }
+.flow .n { font-size: 12px; font-weight: 700; color: var(--blue-600); letter-spacing: .5px; }
+.flow .h { font-weight: 700; font-size: 16.5px; margin: 3px 0 4px; }
+.flow .d { font-size: 14px; color: var(--muted); line-height: 1.45; }
+
+/* formula cards */
+.formula { background: var(--white); border: 1px solid var(--line); border-left: 4px solid var(--blue-600); border-radius: 8px; padding: 12px 16px; margin: 12px 0; max-width: 900px; }
+.formula .eq { font-family: Cambria, 'Times New Roman', serif; font-size: 21px; margin: 4px 0; }
+.formula .w { font-size: 14.5px; color: var(--ink-2); }
+
+/* gallery */
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; margin: 18px 0; max-width: 1180px; }
+.gallery figure { margin: 0; background: var(--white); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.gallery img { display: block; width: 100%; aspect-ratio: 210 / 297; object-fit: cover; object-position: top; cursor: zoom-in; border-bottom: 1px solid var(--line); }
+.gallery figcaption { padding: 10px 12px; font-size: 14px; }
+.gallery figcaption b { display: block; color: var(--blue-900); }
+
+/* badges */
+.b { display: inline-block; padding: 1px 9px; border-radius: 99px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.b.green { background: var(--green-bg); color: var(--green); } .b.red { background: var(--red-bg); color: var(--red); }
+.b.blue { background: var(--blue-100); color: var(--blue-700); } .b.amber { background: var(--amber-bg); color: var(--amber-ink); }
+
+details { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 10px 16px; margin: 10px 0; max-width: 900px; }
+details summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 6px; }
+dl.gloss { display: grid; grid-template-columns: 170px 1fr; gap: 8px 18px; max-width: 900px; }
+dl.gloss dt { font-weight: 700; color: var(--blue-900); }
+dl.gloss dd { margin: 0; }
+
+/* lightbox */
+#lightbox { position: fixed; inset: 0; background: rgba(10,20,40,.88); z-index: 100; display: none; align-items: center; justify-content: center; padding: 30px; cursor: zoom-out; }
+#lightbox.open { display: flex; }
+#lightbox img { max-width: 100%; max-height: 100%; border-radius: 6px; box-shadow: 0 10px 40px rgba(0,0,0,.5); background: #fff; }
+#lightbox .cap { position: fixed; bottom: 14px; left: 0; right: 0; text-align: center; color: #fff; font-size: 14px; opacity: .85; }
+
+footer { margin-top: 70px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+
+@media (max-width: 980px) {
+  .layout { grid-template-columns: 1fr; }
+  nav.toc { position: fixed; top: 60px; left: 0; width: 290px; z-index: 30; transform: translateX(-100%); transition: transform .2s; box-shadow: 4px 0 20px rgba(0,0,0,.15); }
+  nav.toc.open { transform: none; }
+  .menu-btn { display: inline-block; }
+  main { padding: 0 18px 80px; }
+  .hero { margin: 0 -18px 10px; padding: 36px 18px; }
+  .hero h1 { font-size: 30px; }
+  .topbar .hide-sm { display: none; }
+  dl.gloss { grid-template-columns: 1fr; }
+  table.t { display: block; overflow-x: auto; }
+  .topbar strong { font-size: 15px; }
+  .flow { grid-template-columns: 1fr 1fr; }
+  .box { padding-left: 44px; }
+  .box::before { left: 12px; }
+}
+main { overflow-x: clip; }
+@media print { .topbar, nav.toc { display: none; } .layout { display: block; } main { padding: 0; } figure.shot { break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-label="Open contents">☰ Contents</button>
+  <img src="icon.png" alt="">
+  <strong>GeoTech Report Studio</strong>
+  <span class="tag hide-sm">Tutorial · version 0.10</span>
+  <span class="spacer"></span>
+  <a href="#install" class="hide-sm">Install</a>
+  <a href="#reports" class="hide-sm">Reports</a>
+  <a href="#faq" class="hide-sm">Help</a>
+</header>
+
+<div class="layout">
+<nav class="toc" id="toc">
+  <div class="label">Start here</div>
+  <a href="#overview">What the program does</a>
+  <a href="#workflow">The workflow at a glance</a>
+  <a href="#install">1 · Installing</a>
+  <a href="#tour">2 · A tour of the screen</a>
+  <div class="label">Setting up</div>
+  <a href="#company">3 · Company details (once)</a>
+  <a href="#project">4 · Create a project</a>
+  <a href="#drillholes">5 · Add drillholes</a>
+  <div class="label">Entering data</div>
+  <a href="#field">6 · Field data</a>
+  <a class="sub" href="#field-typing">Typing readings</a>
+  <a class="sub" href="#field-paste">Pasting from Excel</a>
+  <a class="sub" href="#field-checks">Checks and errors</a>
+  <a href="#soil">7 · Soil profile</a>
+  <div class="label">Results</div>
+  <a href="#calc">8 · Calculations</a>
+  <a class="sub" href="#calc-formulas">How the numbers are made</a>
+  <a class="sub" href="#calc-critical">Entering critical loads</a>
+  <a href="#graphs">9 · Graphs</a>
+  <a href="#photos">10 · Site photographs</a>
+  <div class="label">Output</div>
+  <a href="#reports">11 · Reports and PDF</a>
+  <a class="sub" href="#reports-gallery">What the pages look like</a>
+  <a class="sub" href="#reports-versions">Saving issued versions</a>
+  <a href="#signoff">12 · Engineer sign-off</a>
+  <div class="label">Looking after your work</div>
+  <a href="#manage">13 · Managing projects</a>
+  <a href="#backup">14 · Backups and moving data</a>
+  <div class="label">Reference</div>
+  <a href="#example">15 · Complete worked example</a>
+  <a href="#keys">16 · Keyboard shortcuts</a>
+  <a href="#faq">17 · Questions and problems</a>
+  <a href="#glossary">18 · Glossary</a>
+</nav>
+
+<main>
+<div class="hero" id="top">
+  <h1>From field sheet to signed report — step by step</h1>
+  <p class="lead">This guide walks you through GeoTech Report Studio screen by screen. You'll enter Advanced Dynamic Cone Penetration Test (ADCPT) readings, check the calculations and charts, and print a complete A4 geotechnical engineering report.</p>
+  <div class="btns">
+    <a class="btn primary" href="#workflow">Start the tutorial ↓</a>
+    <a class="btn ghost" href="sample-report.pdf" target="_blank" rel="noopener">Open a sample report (PDF)</a>
+  </div>
+  <div class="facts"><span>Works fully offline</span><span>No account or internet needed</span><span>Data stays on your computer</span><span>Print-ready A4 PDF</span></div>
+  <div class="temp-note">Temporary tutorial site. All names in the screenshots (company, client, project, engineer) are fictional samples.</div>
+</div>
+
+<!-- ======================================================================= OVERVIEW -->
+<section id="overview">
+  <h2>What the program does</h2>
+  <p class="intro">On site, the field technician records hammer drops and gauge readings for each depth on the soil data sheet. GeoTech Report Studio turns those readings into the full engineering report, and does the repetitive work for you:</p>
+  <ul>
+    <li><b>You type each reading once.</b> Every table, chart and report page is built from that one entry. Correct a reading and every page updates.</li>
+    <li><b>Calculations are automatic and transparent.</b> The program calculates impact load, settlement, ultimate bearing capacity (USBC) and allowable bearing capacity (ASBC), and shows the formula behind every number.</li>
+    <li><b>Charts are drawn for you:</b> load–settlement curves for every depth, and the depth–ASBC profile.</li>
+    <li><b>Reports follow the familiar layout:</b> cover page, bearing-strength table, load–settlement sheets, depth–ASBC curve, soil profile and field data sheet, ready for A4 paper.</li>
+    <li><b>The engineer stays in control.</b> Nothing is certified until the engineer has reviewed and signed the calculation method. Anything still unconfirmed is clearly marked <span class="b red">Requires Engineer Verification</span>.</li>
+  </ul>
+</section>
+
+<section id="workflow">
+  <h2>The workflow at a glance</h2>
+  <p class="intro">Every project follows the same path. Click a card to jump to that part of the tutorial.</p>
+  <div class="flow">
+    <a href="#company"><div class="n">ONCE</div><div class="h">Company details</div><div class="d">Business name, logo, footer, contacts.</div></a>
+    <a href="#project"><div class="n">STEP 1</div><div class="h">Create project</div><div class="d">Title, client, location, dates.</div></a>
+    <a href="#drillholes"><div class="n">STEP 2</div><div class="h">Add drillholes</div><div class="d">DH-01, DH-02… with bit size and safety factor.</div></a>
+    <a href="#field"><div class="n">STEP 3</div><div class="h">Field data</div><div class="d">Type or paste the soil data sheet.</div></a>
+    <a href="#soil"><div class="n">STEP 4</div><div class="h">Soil profile</div><div class="d">Layers, USCS and descriptions.</div></a>
+    <a href="#calc"><div class="n">STEP 5</div><div class="h">Calculations</div><div class="d">Check results; enter critical loads.</div></a>
+    <a href="#graphs"><div class="n">STEP 6</div><div class="h">Graphs</div><div class="d">Review the curves; adjust titles and axes.</div></a>
+    <a href="#reports"><div class="n">STEP 7</div><div class="h">Report</div><div class="d">Choose pages, preview, export PDF or print.</div></a>
+    <a href="#signoff"><div class="n">ENGINEER</div><div class="h">Sign-off</div><div class="d">Approve the method so results are certified.</div></a>
+  </div>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= INSTALL -->
+<section id="install">
+  <h2><span class="num">1</span>Installing</h2>
+  <p class="intro">You install the program once. It needs no internet, no account and no other software.</p>
+  <h3>What you need</h3>
+  <ul>
+    <li>A Windows 10 or Windows 11 computer (64-bit).</li>
+    <li>About 400 MB of free disk space.</li>
+    <li>The installer file <code>GeoTech-Report-Studio-Setup-0.10.0.exe</code>, from your software provider (for example on a USB drive).</li>
+  </ul>
+  <h3>Steps</h3>
+  <ol class="steps">
+    <li><b>Double-click the installer.</b></li>
+    <li><b>If Windows shows "Windows protected your PC",</b> click <b>More info</b>, then <b>Run anyway</b>. The installer isn't yet signed with a commercial certificate, which is why Windows asks. Only do this for an installer you received directly from your provider.</li>
+    <li><b>Choose "Only for me"</b> (no administrator password needed) and click <b>Next</b>. You can keep the suggested folder.</li>
+    <li><b>Click Install</b> and wait about 20 seconds, then click <b>Finish</b>.</li>
+    <li><b>Start the program</b> from the <b>GeoTech Report Studio</b> icon on the desktop or in the Start menu.</li>
+  </ol>
+  <div class="box info"><strong>Where your work is kept</strong>
+    <p>Everything you enter is stored on this computer in <code>%APPDATA%\GeoTech Report Studio</code>. Uninstalling the program does <b>not</b> delete your projects or backups. To see the folders, use <b>Help → Open data folder</b> inside the program.</p></div>
+  <div class="box tip"><strong>Test it offline once</strong><p>The program is built to work without internet. To be sure, unplug the network or switch off Wi-Fi the first time you use it: everything works the same.</p></div>
+</section>
+
+<!-- ======================================================================= TOUR -->
+<section id="tour">
+  <h2><span class="num">2</span>A tour of the screen</h2>
+  <p class="intro">On first start you'll see the <b>Dashboard</b>. It lists your projects (empty at first).</p>
+  <figure class="shot">
+    <img src="img/01-dashboard-empty.webp" alt="Dashboard on first start" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The Dashboard on first start</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Sidebar</b>: the main menu. Once you open a project, its sections appear here in workflow order: Project details, Drillholes, Field data, Calculations and so on.</span></li>
+        <li><b class="m">2</b><span><b>+ New project</b>: start a new investigation.</span></li>
+        <li><b class="m">3</b><span><b>Load reference example</b>: creates a complete demonstration project you can explore without typing anything. Good for practice.</span></li>
+        <li><b class="m">4</b><span><b>Import archive…</b>: opens a project someone exported on another computer (<code>.gtrproj</code> file).</span></li>
+      </ol></figcaption>
+  </figure>
+  <div class="box tip"><strong>Saving is automatic</strong><p>There is no "Save" button for field data: everything is saved as you type. Forms such as project details and the soil profile have a <b>Save</b> button, and the program warns you if you try to leave with unsaved changes.</p></div>
+  <p>The menu bar at the top of the window gives you:</p>
+  <ul>
+    <li><b>File → Back up now</b>: an instant backup.</li>
+    <li><b>View → Zoom in/out</b>: make everything larger on small screens.</li>
+    <li><b>Help → User guide</b>, <b>Open log folder</b> and <b>About</b>.</li>
+  </ul>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= COMPANY -->
+<section id="company">
+  <h2><span class="num">3</span>Company details (do this once)</h2>
+  <p class="intro">Your business details appear on every report page: the cover, the footers and the signature blocks. Enter them once in <b>Settings &amp; backup</b>.</p>
+  <figure class="shot">
+    <img src="img/02-settings-company.webp" alt="Company and report template settings" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Settings &amp; backup → Company &amp; report template</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Business name</b>: printed on the cover and in every page footer.</span></li>
+        <li><b class="m">2</b><span><b>Standard footer text</b>: the line printed above each page footer.</span></li>
+        <li><b class="m">3</b><span><b>Exhibit numbering pattern</b>: how exhibits are numbered. The default <code>B-{hole}.{page}</code> gives B-1.1, B-1.2… for DH-01.</span></li>
+        <li><b class="m">4</b><span><b>Company logo</b>: click <i>Choose…</i> and pick a PNG or JPG file.</span></li>
+        <li><b class="m">5</b><span><b>Seal / signature images</b>: optional. Upload only images you are authorised to use. If left empty, reports leave a blank space for a wet signature.</span></li>
+        <li><b class="m">6</b><span><b>Save template</b>: stores your changes.</span></li>
+      </ol></figcaption>
+  </figure>
+  <div class="box warn"><strong>The program never creates signatures or seals</strong><p>Signature and seal images appear on reports only if you upload them yourself. Never upload an engineer's seal without their permission.</p></div>
+  <p>You can also set the report colours and the paper size (A4 by default; Letter and Legal are available). To keep two different letterheads, use <b>Duplicate template</b>.</p>
+</section>
+
+<!-- ======================================================================= PROJECT -->
+<section id="project">
+  <h2><span class="num">4</span>Create a project</h2>
+  <p class="intro">A project is one investigation for one client: for example "Proposed Three-Storey Commercial Building". It can hold any number of drillholes.</p>
+  <ol class="steps">
+    <li>On the Dashboard, click <b>+ New project</b>.</li>
+    <li>Fill in the fields. Only the <b>title</b> is required, and you can complete the rest later.</li>
+    <li>Click <b>Create project</b>. The program opens the project at the Drillholes page.</li>
+  </ol>
+  <figure class="shot">
+    <img src="img/03-new-project.webp" alt="New project form" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The New project form</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Project title</b>: as it should appear on the report cover.</span></li>
+        <li><b class="m">2</b><span><b>Client / project owner</b>: printed on the cover and in the client signature block.</span></li>
+        <li><b class="m">3</b><span><b>Date tested</b> and <b>Report date</b>: click the field and pick from the calendar.</span></li>
+        <li><b class="m">4</b><span><b>Create project</b>: saves and opens the new project.</span></li>
+      </ol></figcaption>
+  </figure>
+  <p>Later, open <b>Project details</b> in the sidebar to add the engineer in charge, the prepared-by and reviewed-by names, notes and the project status (Draft → Field data entry → For engineer review → Approved → Issued).</p>
+</section>
+
+<!-- ======================================================================= DRILLHOLES -->
+<section id="drillholes">
+  <h2><span class="num">5</span>Add drillholes</h2>
+  <p class="intro">Each test location is a drillhole: DH-01, DH-02 and so on. The program suggests the next code for you.</p>
+  <ol class="steps">
+    <li>In the project, click <b>Drillholes</b> in the sidebar, then <b>+ Add drillhole</b>.</li>
+    <li>Check the code, then enter the date, the start and finish times, the weather and who conducted the test.</li>
+    <li>Check the three engineering settings (see below), then click <b>Save</b>. Repeat for each drillhole.</li>
+  </ol>
+  <figure class="shot">
+    <img src="img/04-add-drillhole.webp" alt="Add drillhole form" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Adding a drillhole</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Code</b>: suggested automatically (DH-01, DH-02…). It must be unique within the project.</span></li>
+        <li><b class="m">2</b><span><b>Times</b>: printed on the field data sheet and the report headers.</span></li>
+        <li><b class="m">3</b><span><b>Drill bit diameter</b>: default 0.05 m. It sets the bearing area used for USBC.</span></li>
+        <li><b class="m">4</b><span><b>Safety factor</b>: default 3.0. ASBC = USBC ÷ safety factor.</span></li>
+        <li><b class="m">5</b><span><b>Critical settlement</b>: default 25 mm. The settlement at which the critical load is taken.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/05-drillholes-list.webp" alt="Drillholes list" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The drillhole list</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span>Each row shows the number of depths entered, the maximum depth, the settings, and the methodology version used for calculations. Click a row to open its field data.</span></li>
+        <li><b class="m">2</b><span><b>Settings</b>: change the drillhole details or its methodology version later.</span></li>
+        <li><b class="m">3</b><span><b>+ Add drillhole</b>: add another test location.</span></li>
+      </ol></figcaption>
+  </figure>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= FIELD DATA -->
+<section id="field">
+  <h2><span class="num">6</span>Field data: the soil data sheet</h2>
+  <p class="intro">This is where you enter the measurements from the field form. The screen works like a spreadsheet and follows the paper sheet: one row per hammer drop, grouped by depth.</p>
+  <h3>How the grid is organised</h3>
+  <table class="t">
+    <tr><th>Column</th><th>What to enter</th><th>Example</th></tr>
+    <tr><td>Depth (m)</td><td>Only on the <b>first row of each depth</b>. Type <code>NGL</code> for "near natural ground level". Leave it blank on the following rows: they belong to the same depth.</td><td>NGL, 1, 2, 2.5 …</td></tr>
+    <tr><td>Drop (mm)</td><td>Height the hammer was dropped from.</td><td>300, 500, 700, 1000</td></tr>
+    <tr><td>Hammer (kg)</td><td>Drop hammer mass.</td><td>30</td></tr>
+    <tr><td>Initial (mm)</td><td>Gauge reading before the first drop. First row of the depth only.</td><td>500</td></tr>
+    <tr><td>Test A / B / C (mm)</td><td>Gauge reading after this drop, for each of the three tests.</td><td>475 / 377 / 320</td></tr>
+    <tr><td>Δ (mm), Blows N</td><td>As recorded on the field sheet. First row of the depth only.</td><td>130 mm, 2</td></tr>
+    <tr><td>Remarks</td><td>Any note for this depth.</td><td>"Gravel encountered"</td></tr>
+  </table>
+  <p>The shaded columns on the right (<b>Impact load</b> and <b>Settl. A/B/C</b>) are <b>calculated</b> by the program and can't be typed in.</p>
+
+  <h3 id="field-typing">Starting a new drillhole</h3>
+  <figure class="shot">
+    <img src="img/06-field-empty.webp" alt="Empty field data page" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">An empty drillhole</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>+ Add first depth (NGL)</b>: creates the first depth with the default drop heights (300, 500, 1000 mm), a 30 kg hammer and an initial reading of 500 mm already filled in.</span></li>
+        <li><b class="m">2</b><span><b>Toolbar</b>: add a depth, insert, duplicate or delete rows, undo and redo. On the right are the defaults for new depths: interval, drop heights, hammer mass and initial reading.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/07-field-typing.webp" alt="Typing readings in the grid" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Typing readings</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span>The depth cell starts a new depth. <code>NGL</code> is accepted as a depth.</span></li>
+        <li><b class="m">2</b><span>The <b>active cell</b> (blue frame). Just start typing to replace its value. Press <kbd>Tab</kbd> to move right and <kbd>Enter</kbd> to move down.</span></li>
+        <li><b class="m">3</b><span><b>Derived columns</b>: impact load and settlements appear as soon as a reading is complete.</span></li>
+      </ol></figcaption>
+  </figure>
+  <ol class="steps">
+    <li>Click a cell (or move to it with the arrow keys).</li>
+    <li>Type the value. Press <kbd>Tab</kbd> to go to the next cell, or <kbd>Enter</kbd> to go down. At the last row, <kbd>Enter</kbd> adds a new row for another drop.</li>
+    <li>To add the next depth, click <b>+ Add depth</b>. It uses the interval shown on the toolbar (1 m by default), so after depth 3 it adds depth 4.</li>
+    <li>Watch the badge at the top right: <span class="b green">All changes saved</span> means everything is stored.</li>
+  </ol>
+
+  <h3 id="field-paste">Pasting from Excel (fastest)</h3>
+  <p>If the field sheet is already typed in Excel, copy the block and paste it straight into the grid. Arrange the Excel columns in the same order as the grid, and leave the depth cell blank on the continuation rows (merged cells copy that way automatically):</p>
+  <table class="t excel">
+    <tr><th>Depth</th><th>Drop</th><th>Hammer</th><th>Initial</th><th>A</th><th>B</th><th>C</th><th>Δ</th><th>N</th></tr>
+    <tr><td>NGL</td><td>300</td><td>30</td><td>500</td><td>475</td><td>377</td><td>320</td><td>130</td><td>2</td></tr>
+    <tr><td></td><td>500</td><td>30</td><td></td><td>440</td><td>355</td><td>301</td><td></td><td></td></tr>
+    <tr><td></td><td>700</td><td>30</td><td></td><td>395</td><td>328</td><td>270</td><td></td><td></td></tr>
+    <tr><td>1</td><td>300</td><td>30</td><td>500</td><td>484</td><td>410</td><td>346</td><td>200</td><td>5</td></tr>
+    <tr><td colspan="9" style="text-align:left">… and so on for every depth</td></tr>
+  </table>
+  <ol class="steps">
+    <li>In Excel, select the block (without the header row) and press <kbd>Ctrl</kbd>+<kbd>C</kbd>.</li>
+    <li>In the program, click the first <b>Depth</b> cell of the grid.</li>
+    <li>Press <kbd>Ctrl</kbd>+<kbd>V</kbd>. All rows appear and are grouped by depth automatically.</li>
+  </ol>
+  <figure class="shot">
+    <img src="img/08-field-pasted.webp" alt="Complete field data after pasting" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">A complete drillhole, from NGL to 10 m</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span>A row <b>with</b> a depth starts a new depth group (thicker line above it).</span></li>
+        <li><b class="m">2</b><span>Rows <b>without</b> a depth are further drops at the same depth. The trial number is counted for you.</span></li>
+        <li><b class="m">3</b><span>Calculated values: impact load for each drop, and the settlement produced by each drop for tests A, B and C.</span></li>
+        <li><b class="m">4</b><span><b>All changes saved</b>: the data is safely stored.</span></li>
+      </ol></figcaption>
+  </figure>
+
+  <h3 id="field-checks">Checks, warnings and errors</h3>
+  <p>The program checks every reading as you type. Problems are coloured in the grid and listed below it:</p>
+  <ul>
+    <li><span class="b amber">Amber</span> = <b>warning</b>. Something looks unusual, such as a missing reading or a reading <i>higher</i> than the previous one (the gauge should only go down). The data is still saved, but check it.</li>
+    <li><span class="b red">Red</span> = <b>error</b>. The value can't be used, for example text instead of a number. <b>The latest changes are not saved</b> until you correct it.</li>
+  </ul>
+  <figure class="shot">
+    <img src="img/09-field-validation.webp" alt="Validation warnings and errors" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The program flags suspicious and invalid readings</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Warning</b>: 480 is higher than the previous reading (475). This is possibly a typing error. The settlement column shows −5.</span></li>
+        <li><b class="m">2</b><span><b>Error</b>: "3x8" is not a number. Hover the mouse over any coloured cell to read the message.</span></li>
+        <li><b class="m">3</b><span>The <b>Checks</b> list. Click a line to jump straight to that cell.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/09b-field-not-saved.webp" alt="Not saved badge" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">While a red cell exists, recent edits are not saved</div>
+      <ol class="legend"><li><b class="m">1</b><span>The badge changes to <b>Not saved — correct the red cells</b>. Fix the value (or press <kbd>Ctrl</kbd>+<kbd>Z</kbd> to undo) and saving resumes immediately.</span></li></ol></figcaption>
+  </figure>
+  <div class="box tip"><strong>Made a mistake? Undo it.</strong><p><kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes your last change and <kbd>Ctrl</kbd>+<kbd>Y</kbd> redoes it. You can undo many steps, including a paste.</p></div>
+  <p>Other useful tools:</p>
+  <ul>
+    <li><b>Insert row</b>: add an extra drop at the same depth.</li>
+    <li><b>Duplicate depth</b>: copy a whole depth to the end, ready to edit.</li>
+    <li><b>Delete rows / Delete depth</b>: remove what you don't need.</li>
+    <li><kbd>Ctrl</kbd>+<kbd>D</kbd>: fill the selection down. Select a column range with <kbd>Shift</kbd>+arrows first.</li>
+  </ul>
+  <p>There is no depth limit: you can record holes deeper than 10 m.</p>
+</section>
+
+<!-- ======================================================================= SOIL -->
+<section id="soil">
+  <h2><span class="num">7</span>Soil profile</h2>
+  <p class="intro">Describe the soil layers found in the drillhole. These descriptions are printed in the report's classification column, next to the depth–ASBC curve and on the soil profile page.</p>
+  <figure class="shot">
+    <img src="img/10-soil-profile.webp" alt="Soil profile editor" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Soil profile → + Add layer</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>From / To (m)</b>: the depth range of the layer. Layers must not overlap. The program warns about gaps.</span></li>
+        <li><b class="m">2</b><span><b>USCS</b>: the soil symbol (CL, CH, ML…). Suggestions appear as you type.</span></li>
+        <li><b class="m">3</b><span><b>Material description</b>: e.g. "Lean clay, yellowish-brown". It can be as long as needed.</span></li>
+        <li><b class="m">4</b><span><b>Consistency / strength</b>: e.g. "Stiff clay" or "Extremely weak rock".</span></li>
+        <li><b class="m">5</b><span><b>Save profile</b>: stores the layers.</span></li>
+      </ol></figcaption>
+  </figure>
+  <div class="box info"><strong>Classification is your decision</strong><p>The program never guesses soil type or consistency from the penetration readings. What you type here is what appears on the report.</p></div>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= CALCULATIONS -->
+<section id="calc">
+  <h2><span class="num">8</span>Calculations</h2>
+  <p class="intro">The Calculations page shows, for every depth, the load–settlement values and the bearing capacity. Most of the work is automatic. The one thing you add is the <b>critical load</b> for each depth.</p>
+
+  <h3 id="calc-formulas">How the numbers are made</h3>
+  <p>These are the formulas the program uses (shown with the reference report's values):</p>
+  <div class="formula"><div class="w"><b>F-01 · Impact load</b> for each drop</div>
+    <div class="eq">I = M × √(27 × H)</div>
+    <div class="w">M = hammer mass (kg), H = drop height in <b>metres</b>. Example: 30 kg dropped 300 mm → 30 × √(27 × 0.3) = <b>85.38 kg</b>. With no drop (H = 0), I = M = 30 kg.</div></div>
+  <div class="formula"><div class="w"><b>F-02 · Settlement</b> produced by each drop</div>
+    <div class="eq">s = previous reading − new reading</div>
+    <div class="w">Readings follow in the order A1, A2, A3, then B1… then C1…, starting from the initial reading. Example: 500 → 475 gives a settlement of <b>25 mm</b>.</div></div>
+  <div class="formula"><div class="w"><b>F-03 to F-05 · Bearing capacity</b> from the critical load</div>
+    <div class="eq">P = I × 0.01 &nbsp;·&nbsp; USBC = P ÷ (π d² ÷ 4) &nbsp;·&nbsp; ASBC = USBC ÷ SF</div>
+    <div class="w">Example: critical load 180 kg → P = 1.800 kN → bearing area of a 0.05 m bit = 0.0019635 m² → USBC = <b>916.73 kPa</b> → with SF 3.0, ASBC = <b>305.58 kPa</b>.</div></div>
+  <div class="formula" style="border-left-color: var(--red)"><div class="w"><b>F-06 · Critical load</b> at the critical settlement (25 mm)</div>
+    <div class="eq">Determined by the engineer for each depth</div>
+    <div class="w">The engineer reads the critical load from the load–settlement data and enters it. The program records who entered it, why, and when.</div></div>
+  <p>The full details of every formula (inputs, units, rounding and status) are on the <b>Methodology</b> page.</p>
+
+  <figure class="shot">
+    <img src="img/11-calculations-start.webp" alt="Calculations page before critical loads" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Calculations, before any critical load is entered</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span>This notice explains that the critical load requires the engineer's input, and that results aren't certified until the method is signed (section 12).</span></li>
+        <li><b class="m">2</b><span>Settlement of tests A / B / C at the last drop of each depth: a quick check of how hard the ground was.</span></li>
+        <li><b class="m">3</b><span><b>Enter critical load</b>: opens the entry dialog for that depth.</span></li>
+      </ol></figcaption>
+  </figure>
+
+  <h3 id="calc-critical">Entering critical loads</h3>
+  <ol class="steps">
+    <li>Click <b>Load–settlement</b> on a row to see that depth's drops, loads and settlements. The <a href="#graphs">Graphs</a> page shows the same data as a curve.</li>
+    <li>Decide the load at which the critical settlement (25 mm) is reached.</li>
+    <li>Click <b>Enter critical load</b>, type the load in kg, a short reason (the basis) and your name, then click <b>Save</b>.</li>
+    <li>USBC and ASBC appear on that row immediately. Repeat for every depth.</li>
+  </ol>
+  <figure class="shot">
+    <img src="img/12-critical-load-dialog.webp" alt="Critical load dialog" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The critical-load dialog</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Critical load (kg)</b> at the critical settlement.</span></li>
+        <li><b class="m">2</b><span><b>Basis</b>: how you determined it, e.g. "Read from curve, Test A".</span></li>
+        <li><b class="m">3</b><span><b>Decided by</b>: your name, remembered for next time.</span></li>
+        <li><b class="m">4</b><span><b>Save</b>: the decision is stored with the time and added to the activity log.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/13-calculations-results.webp" alt="Calculations with results" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Results after entering critical loads</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>ASBC (kPa)</b>: the allowable bearing capacity for the depth.</span></li>
+        <li><b class="m">2</b><span>A depth without a critical load stays <span class="b red">Requires Engineer Verification</span>. The program never fills it in for you.</span></li>
+        <li><b class="m">3</b><span>The expanded <b>Load–settlement</b> table for a depth: every drop, impact load, reading and settlement.</span></li>
+      </ol></figcaption>
+  </figure>
+  <div class="box warn"><strong>"Matches reference · not signed off"</strong><p>This blue badge means the number was calculated correctly with the formulas from the reference report, but the engineer has not yet approved the method. After sign-off (section 12) the badge changes to <span class="b green">Certified</span>.</p></div>
+</section>
+
+<!-- ======================================================================= GRAPHS -->
+<section id="graphs">
+  <h2><span class="num">9</span>Graphs</h2>
+  <p class="intro">The program draws two kinds of chart for every drillhole. They update automatically whenever readings or critical loads change, and the same charts are used in the report.</p>
+  <figure class="shot">
+    <img src="img/14-graph-depth-asbc.webp" alt="Depth–ASBC profile chart" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Depth – ASBC profile</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Chart settings</b>: title, axis limits, colour or black-and-white, soil column, value labels.</span></li>
+        <li><b class="m">2</b><span><b>Show data table</b>: the exact numbers beside the chart.</span></li>
+        <li><b class="m">3</b><span><b>Export SVG / PNG</b>: save the chart as an image for Word or other documents. Use SVG for the sharpest print.</span></li>
+        <li><b class="m">4</b><span>Point the mouse at any point to see its exact value, critical load and USBC.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/14b-graph-not-plotted.webp" alt="Depths not plotted note" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Missing depths are never invented</div>
+      <ol class="legend"><li><b class="m">1</b><span>Depths without a critical load are <b>not plotted</b>. They are listed under the chart, and the line is not drawn across them.</span></li></ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/15-graph-settings.webp" alt="Chart settings panel" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Chart settings (saved per drillhole and used in the report)</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Title</b>: <code>{hole}</code> and <code>{depth}</code> are replaced automatically, e.g. "DH-01".</span></li>
+        <li><b class="m">2</b><span><b>Print style</b>: <i>Black &amp; white</i> for monochrome printers. Each test also has its own marker shape and line style.</span></li>
+        <li><b class="m">3</b><span><b>Axis limits</b>: leave blank for automatic, or type fixed values (e.g. 0–1000 kPa) so all drillholes look the same.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/16-graph-load-settlement.webp" alt="Load–settlement chart" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Dynamic loads – settlements (one chart per depth)</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Depth buttons</b>: choose the depth to display. A ✓ marks depths with a critical load.</span></li>
+        <li><b class="m">2</b><span><b>All depths</b>: show every depth's chart at once.</span></li>
+      </ol>
+      <p style="margin:8px 0 0">The horizontal dashed line is the critical settlement (25 mm). The vertical dashed line is the critical load, drawn only if you entered one. Test A is a blue circle, Test B an orange square, Test C a green triangle.</p></figcaption>
+  </figure>
+</section>
+
+<!-- ======================================================================= PHOTOS -->
+<section id="photos">
+  <h2><span class="num">10</span>Site photographs</h2>
+  <p class="intro">Add photos of the site and of each drillhole test. Up to six appear on the report cover, with their captions.</p>
+  <figure class="shot">
+    <img src="img/17-photos.webp" alt="Site photographs page" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Site photographs</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>+ Add photographs…</b>: pick one or more JPG/PNG files. They are copied into the program, so you can move or delete the originals.</span></li>
+        <li><b class="m">2</b><span><b>Caption</b>: printed on the photo on the cover (e.g. "DRILLHOLE-01").</span></li>
+        <li><b class="m">3</b><span>Link the photo to a drillhole, or leave it as "Site (general)".</span></li>
+      </ol>
+      <p style="margin:8px 0 0"><i>The images in this tutorial are drawn samples, not real site photos.</i></p></figcaption>
+  </figure>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= REPORTS -->
+<section id="reports">
+  <h2><span class="num">11</span>Reports and PDF</h2>
+  <p class="intro">The Reports page builds the complete report from everything you've entered. The preview on the right is <b>exactly</b> what the PDF and the printer will produce.</p>
+  <figure class="shot">
+    <img src="img/18-reports-builder.webp" alt="Report builder" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The report builder</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Pages</b>: every page the report can contain. Untick to leave a page out.</span></li>
+        <li><b class="m">2</b><span><b>Content</b>: number of cover photos, the engineer's notes and conclusions.</span></li>
+        <li><b class="m">3</b><span><b>Live preview</b>: scroll to see every page. Use <i>Zoom</i> to enlarge.</span></li>
+        <li><b class="m">4</b><span><b>Export PDF…</b>: choose where to save the PDF.</span></li>
+        <li><b class="m">5</b><span><b>Save version…</b>: keep an official copy of an issued report (see below).</span></li>
+        <li><b class="m">6</b><span><b>Print…</b>: send straight to a printer.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/19-reports-page-list.webp" alt="Page list controls" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Choosing and ordering pages</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Tick / untick</b> to include or exclude a page. The preview updates immediately.</span></li>
+        <li><b class="m">2</b><span><b>↑ ↓</b> move a page earlier or later. <b>Reset</b> restores the standard order.</span></li>
+        <li><b class="m">3</b><span><b>Exhibit no.</b>: leave blank for automatic numbering (B-1.1, B-1.2…), or type your own.</span></li>
+      </ol></figcaption>
+  </figure>
+  <div class="box warn"><strong>If a page is outlined in red</strong><p>Its contents don't fit on the paper, for example a very long soil description. The page numbers are listed above the preview. Shorten the text and the outline disappears. The program never silently cuts text off.</p></div>
+  <div class="box tip"><strong>Printing tip</strong><p>When printing a PDF from a PDF viewer, choose <b>Actual size / 100%</b>, not "Fit to page", so the pages print at exactly A4.</p></div>
+
+  <h3 id="reports-gallery">What the pages look like</h3>
+  <p>Click any page to enlarge it, or <a href="sample-report.pdf" target="_blank" rel="noopener">open the complete 18-page sample report (PDF)</a>.</p>
+  <div class="gallery">
+    <figure><img src="img/report-cover.webp" alt="Cover page" loading="lazy"><figcaption><b>Cover page</b>Company, title, site photos, project details, client and vendor blocks.</figcaption></figure>
+    <figure><img src="img/report-summary.webp" alt="Project summary" loading="lazy"><figcaption><b>Project summary</b>Project information, drillhole summary, formulas and the engineer's sign-off.</figcaption></figure>
+    <figure><img src="img/report-bearing.webp" alt="Soil bearing strength results" loading="lazy"><figcaption><b>Soil bearing strength results</b>Every drop and the critical row per depth (exhibit B-1.1).</figcaption></figure>
+    <figure><img src="img/report-load-settlement.webp" alt="Load–settlement analysis" loading="lazy"><figcaption><b>Loads–settlements analysis</b>One page per depth with table and chart (B-1.2).</figcaption></figure>
+    <figure><img src="img/report-depth-asbc.webp" alt="Depth–ASBC curve" loading="lazy"><figcaption><b>Borehole depth – ASBC curve</b>Profile with the soil description column (B-1.3).</figcaption></figure>
+    <figure><img src="img/report-soil-profile.webp" alt="Soil profile" loading="lazy"><figcaption><b>Soil profile</b>The layers you entered (B-1.4).</figcaption></figure>
+    <figure><img src="img/report-data-sheet.webp" alt="Soil data sheet" loading="lazy"><figcaption><b>Soil data sheet</b>The raw field readings (B-1.5).</figcaption></figure>
+  </div>
+  <p>There is also an optional <b>Engineer's notes and conclusions</b> page with signature lines. Tick it in the page list to include it.</p>
+
+  <h3 id="reports-versions">Saving issued versions</h3>
+  <p>When you send a report to a client, click <b>Save version…</b>. The program stores the PDF together with a frozen copy of <b>all</b> the data behind it. If you edit the project later, the saved version does not change.</p>
+  <figure class="shot">
+    <img src="img/20-save-version.webp" alt="Save version dialog" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Save report version</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Label</b>: e.g. "Rev. 0 — issued to client".</span></li>
+        <li><b class="m">2</b><span><b>Save version</b>: generates and stores the PDF.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/21-saved-versions.webp" alt="Saved versions list" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Saved versions</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Open PDF</b>: opens the stored PDF exactly as issued.</span></li>
+        <li><b class="m">2</b><span><b>Preview</b>: shows the old version in the preview (read-only). Click <i>Back to current</i> to return.</span></li>
+        <li><b class="m">3</b><span><b>Regenerate PDF</b>: recreates the PDF from the frozen data, for example if the stored file was lost.</span></li>
+      </ol></figcaption>
+  </figure>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= SIGN-OFF -->
+<section id="signoff">
+  <h2><span class="num">12</span>Engineer sign-off: making results certified</h2>
+  <p class="intro">The program comes with the calculation method rebuilt from the reference report. It reproduces the reference numbers exactly, but it is <b>not certified</b> until the responsible engineer reviews and signs it. This section is for the engineer.</p>
+  <div class="box info"><strong>Why this step exists</strong>
+    <p>A report should only call results "certified" when a qualified engineer has confirmed the method. Until then, every screen and report page says so clearly. After sign-off, the warnings are replaced by the engineer's name, licence number and date.</p></div>
+  <figure class="shot">
+    <img src="img/22-methodology-builtin.webp" alt="Methodology page, built-in version" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Methodology page: the built-in version</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Versions</b>: the built-in <i>0.1-draft</i> is "Not signed".</span></li>
+        <li><b class="m">2</b><span>The notice confirms results calculated with it are not certified.</span></li>
+        <li><b class="m">3</b><span><b>New draft from …</b>: start your own reviewed version from it.</span></li>
+      </ol></figcaption>
+  </figure>
+  <h3>Step by step</h3>
+  <ol class="steps">
+    <li>Click <b>New draft from 0.1-draft…</b>, keep the suggested name <code>1.0</code>, then click <b>Create draft</b>.</li>
+    <li>Review the <b>parameters</b>, such as the 0.01 kN/kg conversion. Change them only if your method differs.</li>
+    <li>In <b>Formula review</b>, choose <i>Engineer approved</i> for each formula you accept, and add a note if useful.</li>
+    <li>Write your <b>answers</b> to the open questions, especially Q-03: how you obtain the critical load.</li>
+    <li>Click <b>Review &amp; sign…</b>, enter your name and PRC licence number, tick the confirmation and click <b>Sign and publish</b>.</li>
+    <li>Click <b>Apply to drillholes…</b> to recalculate existing drillholes with the signed version.</li>
+  </ol>
+  <figure class="shot">
+    <img src="img/23b-methodology-draft-top.webp" alt="Draft header" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">A draft version (editable)</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Version name</b>: e.g. 1.0.</span></li>
+        <li><b class="m">2</b><span><b>Save draft</b>: keep your progress and come back later.</span></li>
+        <li><b class="m">3</b><span><b>Review &amp; sign…</b>: when you're ready to approve.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/24-methodology-parameters.webp" alt="Methodology parameters" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Parameters</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Load conversion</b>: 0.01 kN/kg as in the reference report (gravity taken as 10 m/s²), or 0.00980665 for standard gravity.</span></li>
+        <li><b class="m">2</b><span><b>Impact constant</b>: the 27 in I = M × √(27 × H).</span></li>
+      </ol>
+      <p style="margin:8px 0 0">If you change a parameter that affects a formula, that formula is automatically set back to "Requires Engineer Verification", so it can never be approved by accident.</p></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/23-methodology-draft.webp" alt="Formula review table" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Formula review</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Decision</b> for each formula: <i>Engineer approved</i> or <i>Requires Engineer Verification</i>.</span></li>
+        <li><b class="m">2</b><span><b>Engineer's note</b>: optional remark saved with the version.</span></li>
+      </ol>
+      <p style="margin:8px 0 0">Approving F-06 (critical load) approves it as <b>your own determination per depth</b>. The program doesn't introduce any automatic method.</p></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/25-methodology-sign.webp" alt="Sign and publish dialog" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Review &amp; sign</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Approving engineer</b>: your full name.</span></li>
+        <li><b class="m">2</b><span><b>PRC licence no.</b>: optional, printed with the approval.</span></li>
+        <li><b class="m">3</b><span><b>Confirmation</b>: required.</span></li>
+        <li><b class="m">4</b><span><b>Sign and publish</b>: after this the version can't be changed. To change anything later, start a new draft from it.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/26-methodology-signed.webp" alt="Signed methodology version" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The signed version</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span>The approval: name, licence, date, statement. All bearing formulas are approved, so results are certified.</span></li>
+        <li><b class="m">2</b><span><b>Apply to drillholes…</b>: choose which existing drillholes use this version.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/27-methodology-apply.webp" alt="Apply methodology to drillholes" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Applying the signed version</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span>Tick the drillholes to switch. Reports you saved earlier keep the method they were issued with.</span></li>
+        <li><b class="m">2</b><span><b>Apply</b>: recalculates the selected drillholes.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/28-calculations-certified.webp" alt="Certified results" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The result: certified calculations</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span>The notice now shows the signed method, the engineer and the date.</span></li>
+        <li><b class="m">2</b><span>Every depth with a critical load is marked <span class="b green">Certified</span>. Report pages show the approval instead of the verification warning.</span></li>
+      </ol></figcaption>
+  </figure>
+  <div class="box warn"><strong>Protect the computer</strong><p>The sign-off is a recorded statement inside the program, not a legal digital signature: anyone using the computer could type a name. Keep the computer password-protected. Each signed version is fingerprinted, so if it is changed outside the program it is marked "Integrity check failed" and can't be used.</p></div>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= MANAGE -->
+<section id="manage">
+  <h2><span class="num">13</span>Managing projects</h2>
+  <figure class="shot">
+    <img src="img/29-dashboard.webp" alt="Dashboard with a project" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">The Dashboard with projects</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Counters</b>: projects in progress, awaiting review, approved or issued.</span></li>
+        <li><b class="m">2</b><span><b>Search</b> by title, client, reference or location.</span></li>
+        <li><b class="m">3</b><span>Click a project to open it.</span></li>
+        <li><b class="m">4</b><span><b>Duplicate</b>: copy a project, e.g. as a starting point for a similar job. <b>Export</b>: save it as a single file.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/30-project-details.webp" alt="Project details" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Project details</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Status</b>: track where the project is (Draft → Issued).</span></li>
+        <li><b class="m">2</b><span><b>Export archive…</b>: one file containing the whole project, with photos.</span></li>
+        <li><b class="m">3</b><span><b>Activity log</b>: who changed what and when.</span></li>
+      </ol></figcaption>
+  </figure>
+  <figure class="shot">
+    <img src="img/31-compare.webp" alt="Compare drillholes" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Compare drillholes</div>
+      <p style="margin:4px 0 0">Shows the total penetration of tests A/B/C and the N/Δ values at each depth, side by side for all drillholes in the project.</p></figcaption>
+  </figure>
+</section>
+
+<!-- ======================================================================= BACKUP -->
+<section id="backup">
+  <h2><span class="num">14</span>Backups and moving data</h2>
+  <p class="intro">Your projects exist only on this computer, so backups matter. The program makes one automatically every day, but you should also copy backups to a USB drive or cloud folder regularly.</p>
+  <figure class="shot">
+    <img src="img/32-backup.webp" alt="Backup and restore" loading="lazy" width="1440" height="900">
+    <figcaption><div class="title">Settings &amp; backup → Backup &amp; restore</div>
+      <ol class="legend">
+        <li><b class="m">1</b><span><b>Back up now</b>: an instant backup in the program's backup folder.</span></li>
+        <li><b class="m">2</b><span><b>Save backup as…</b>: save a backup anywhere, e.g. a USB drive.</span></li>
+        <li><b class="m">3</b><span><b>Restore from file…</b>: bring back a backup. A safety copy of the current data is made first.</span></li>
+        <li><b class="m">4</b><span><b>Backup list</b>: automatic (daily), manual and pre-restore backups, each with its own <i>Restore</i> button.</span></li>
+      </ol></figcaption>
+  </figure>
+  <table class="t">
+    <tr><th>I want to…</th><th>Use</th><th>File</th></tr>
+    <tr><td>Protect everything against a broken computer</td><td>Settings &amp; backup → <b>Save backup as…</b> to a USB drive</td><td><code>.gtrbak</code></td></tr>
+    <tr><td>Send one project to another computer</td><td>Project details → <b>Export archive…</b>, then on the other computer Dashboard → <b>Import archive…</b></td><td><code>.gtrproj</code></td></tr>
+    <tr><td>Go back to yesterday's data</td><td>Settings &amp; backup → backup list → <b>Restore</b></td><td>automatic</td></tr>
+    <tr><td>Install a new version of the program</td><td>Make a manual backup first, then run the new installer. Your data is kept.</td><td>—</td></tr>
+  </table>
+  <div class="box danger"><strong>Restore replaces everything</strong><p>Restoring a backup replaces <b>all</b> current projects with the contents of the backup. The program makes a safety backup first, so you can undo it, but check which backup you choose.</p></div>
+</section>
+
+<hr class="section">
+<!-- ======================================================================= EXAMPLE -->
+<section id="example">
+  <h2><span class="num">15</span>Complete worked example: field sheet to PDF</h2>
+  <p class="intro">A checklist for a typical two-drillhole job. With the readings already in Excel it takes about 15 minutes.</p>
+  <ol class="steps">
+    <li><b>Dashboard → + New project.</b> Title "Proposed Three (3) Storey Commercial Building", client, location, dates → <b>Create project</b>.</li>
+    <li><b>Drillholes → + Add drillhole</b> twice (DH-01 and DH-02). Enter times and who conducted the test. Keep bit 0.05 m, SF 3.0 and 25 mm unless your test differs.</li>
+    <li><b>Field data → DH-01.</b> Click the first depth cell and paste the readings from Excel (<kbd>Ctrl</kbd>+<kbd>V</kbd>). Clear every red cell, check the amber ones, and wait for <span class="b green">All changes saved</span>. Repeat for DH-02.</li>
+    <li><b>Soil profile.</b> Add the layers (e.g. 0–8.8 m CL lean clay, stiff to very stiff; 8.8–10 m lithified clay, extremely weak rock) → <b>Save profile</b>.</li>
+    <li><b>Calculations.</b> For each depth, look at the load–settlement values and click <b>Enter critical load</b>. With 180 kg at 2 m you should see ASBC = <b>305.58 kPa</b>.</li>
+    <li><b>Graphs.</b> Check the depth–ASBC profile and the load–settlement curves. If needed, fix the axes in Chart settings (e.g. ASBC 0–1000 kPa).</li>
+    <li><b>Site photographs.</b> Add the site and drillhole photos and caption them.</li>
+    <li><b>Reports.</b> Scroll through the preview. Make sure no page is outlined in red, then <b>Export PDF…</b>.</li>
+    <li><b>Engineer.</b> Check the PDF. If the method is already signed, results are certified; if not, see section 12.</li>
+    <li><b>Issue.</b> Click <b>Save version…</b> with a label such as "Rev. 0 — issued to client", then back up to a USB drive.</li>
+  </ol>
+  <div class="box tip"><strong>Practise first</strong><p>Click <b>Load reference example</b> on the Dashboard to get a ready-made project with real readings. You can try every step without affecting your own work, then delete it from Project details.</p></div>
+</section>
+
+<!-- ======================================================================= KEYS -->
+<section id="keys">
+  <h2><span class="num">16</span>Keyboard shortcuts (field data grid)</h2>
+  <table class="t">
+    <tr><th style="width:240px">Keys</th><th>What happens</th></tr>
+    <tr><td>Start typing</td><td>Replaces the value of the active cell</td></tr>
+    <tr><td><kbd>Enter</kbd> or <kbd>F2</kbd></td><td>Edit the cell, keeping its value</td></tr>
+    <tr><td><kbd>Enter</kbd> (while editing)</td><td>Save and move down. On the last row it adds a new row.</td></tr>
+    <tr><td><kbd>Tab</kbd> / <kbd>Shift</kbd>+<kbd>Tab</kbd></td><td>Save and move right / left</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>Cancel the edit</td></tr>
+    <tr><td>Arrow keys</td><td>Move around. Hold <kbd>Shift</kbd> to select several cells.</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>Ctrl</kbd>+<kbd>V</kbd></td><td>Copy / paste, also to and from Excel</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Fill down: copy the top cell of the selection into the cells below</td></tr>
+    <tr><td><kbd>Delete</kbd></td><td>Clear the selected cells</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Undo / redo</td></tr>
+    <tr><td><kbd>Ctrl</kbd>+<kbd>A</kbd></td><td>Select the whole grid</td></tr>
+  </table>
+</section>
+
+<!-- ======================================================================= FAQ -->
+<section id="faq">
+  <h2><span class="num">17</span>Questions and problems</h2>
+  <details><summary>Windows says "Windows protected your PC" when I install</summary><p>The installer is not yet signed with a commercial certificate. Click <b>More info → Run anyway</b>, but only for the installer you received from your provider.</p></details>
+  <details><summary>The badge says "Not saved — correct the red cells"</summary><p>A cell contains something that isn't a number, such as "3x8". Click the line in the Checks list under the grid to jump to it, then fix or clear it. Saving resumes automatically.</p></details>
+  <details><summary>A reading is marked amber: "higher than the previous reading"</summary><p>Gauge readings should get smaller with each drop. A higher reading usually means a typing error, or occasionally a rebound. Check the field sheet: if the value is right, you can leave it, because warnings don't stop saving.</p></details>
+  <details><summary>The ASBC for a depth is missing</summary><p>Enter the critical load for that depth on the <b>Calculations</b> page. Depths without one are never filled in automatically.</p></details>
+  <details><summary>My report still says "Requires Engineer Verification"</summary><p>The calculation method for that drillhole hasn't been signed by the engineer, or not all formulas are approved. See <a href="#signoff">section 12</a>. Also check that the drillhole uses the signed version: Drillholes → Settings → Methodology version.</p></details>
+  <details><summary>A report page is outlined in red</summary><p>Its contents don't fit on the page, usually because of a very long soil description or note. Shorten the text; the outline disappears as soon as it fits.</p></details>
+  <details><summary>The printed page is smaller or larger than A4</summary><p>Print from the PDF at <b>Actual size / 100%</b>, not "Fit to page". Check the paper size in Settings (A4 by default).</p></details>
+  <details><summary>Can I use the program on two computers?</summary><p>Yes. Install it on both and move projects with <b>Export archive</b> and <b>Import archive</b>. Each computer keeps its own data. Don't edit the same project on both at once.</p></details>
+  <details><summary>Does the program send my data anywhere?</summary><p>No. It works completely offline and network access is blocked by design. Your data stays in <code>%APPDATA%\GeoTech Report Studio</code> on your computer.</p></details>
+  <details><summary>Something went wrong. What should I send to support?</summary><p>Use <b>Help → Open log folder</b> and send the file <code>app.log</code>. It contains event and error messages, not your measurements.</p></details>
+</section>
+
+<!-- ======================================================================= GLOSSARY -->
+<section id="glossary">
+  <h2><span class="num">18</span>Glossary</h2>
+  <dl class="gloss">
+    <dt>ADCPT</dt><dd>Advanced Dynamic Cone Penetration Test: a hammer is dropped from set heights and the penetration is measured, to estimate soil bearing capacity.</dd>
+    <dt>NGL</dt><dd>Natural ground level: the first test depth, at the surface.</dd>
+    <dt>Drop height (H)</dt><dd>Height in mm from which the hammer falls.</dd>
+    <dt>Hammer mass (M)</dt><dd>Mass of the drop hammer in kg (30 kg in the examples).</dd>
+    <dt>Initial reading</dt><dd>Gauge reading before the first drop at a depth (500 mm in the examples).</dd>
+    <dt>Tests A, B, C</dt><dd>Three successive test series at each depth. Their readings continue from one another.</dd>
+    <dt>Settlement</dt><dd>How far the cone moved down with one drop: previous reading minus new reading (mm).</dd>
+    <dt>Impact load (I)</dt><dd>Load produced by a drop: I = M × √(27 × H), H in metres.</dd>
+    <dt>Critical settlement</dt><dd>The settlement (25 mm by default) at which the critical load is taken.</dd>
+    <dt>Critical load</dt><dd>The load at the critical settlement, determined by the engineer for each depth.</dd>
+    <dt>USBC</dt><dd>Ultimate soil bearing capacity (kPa): load divided by the bearing area of the drill bit.</dd>
+    <dt>SF</dt><dd>Safety factor (3.0 by default).</dd>
+    <dt>ASBC</dt><dd>Allowable soil bearing capacity (kPa) = USBC ÷ SF. The value used for design.</dd>
+    <dt>USCS</dt><dd>Unified Soil Classification System, e.g. CL = lean clay.</dd>
+    <dt>Δ and N</dt><dd>Values recorded on the field data sheet (penetration and number of blows), printed as entered.</dd>
+    <dt>Exhibit</dt><dd>A numbered set of report pages, e.g. B-1.2 for the load–settlement sheets of DH-01.</dd>
+    <dt>Methodology version</dt><dd>A recorded set of formulas and settings. Once signed by the engineer it can't be changed, and reports keep the version they were calculated with.</dd>
+    <dt>Certified</dt><dd>Calculated with a signed methodology version in which all bearing formulas are approved, with a critical load entered by the engineer.</dd>
+  </dl>
+  <footer>
+    GeoTech Report Studio · tutorial for version 0.10.0 · All names, photos and companies shown are fictional samples for illustration.<br>
+    The program works offline and keeps all data on your computer. <a href="#top">Back to top ↑</a>
+  </footer>
+</section>
+</main>
+</div>
+
+<div id="lightbox" role="dialog" aria-label="Enlarged image"><img alt=""><div class="cap"></div></div>
+
+<script>
+// Click-to-enlarge for screenshots and report pages.
+const lb = document.getElementById('lightbox');
+const lbImg = lb.querySelector('img');
+const lbCap = lb.querySelector('.cap');
+document.querySelectorAll('figure img').forEach((img) => img.addEventListener('click', () => {
+  lbImg.src = img.src;
+  lbImg.alt = img.alt;
+  lbCap.textContent = `${img.alt} — click anywhere or press Esc to close`;
+  lb.classList.add('open');
+}));
+lb.addEventListener('click', () => lb.classList.remove('open'));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lb.classList.remove('open'); });
+
+// Highlight the current section in the contents.
+const links = [...document.querySelectorAll('nav.toc a')];
+const targets = links.map((a) => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const spy = new IntersectionObserver((entries) => {
+  entries.forEach((en) => {
+    if (!en.isIntersecting) return;
+    links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === `#${en.target.id}`));
+  });
+}, { rootMargin: '-70px 0px -70% 0px' });
+targets.forEach((t) => spy.observe(t));
+
+// Mobile contents menu.
+const toc = document.getElementById('toc');
+document.getElementById('menuBtn').addEventListener('click', () => toc.classList.toggle('open'));
+links.forEach((a) => a.addEventListener('click', () => toc.classList.remove('open')));
+</script>
+</body>
+</html>
